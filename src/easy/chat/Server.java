@@ -1,5 +1,5 @@
 /**
-    @author mahfuz
+    @author Mahfuz
 **/
 
 package easy.chat; // package
