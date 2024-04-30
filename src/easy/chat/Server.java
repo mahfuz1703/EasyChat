@@ -2,7 +2,7 @@
     @author mahfuz
 **/
 
-package easy.chat;
+package easy.chat; // package
 import javax.swing.*; // for GUI
 import java.awt.*; // for set background and others color, styles
 
