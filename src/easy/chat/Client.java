@@ -14,14 +14,14 @@ import java.net.*; // for socket programming
 import java.io.*;
 
 
-public class Server implements ActionListener{
+public class Client implements ActionListener{
     JTextField text;
-    JPanel a1;
+    static JPanel a1;
     static Box vertical = Box.createVerticalBox();
     static  JFrame f = new JFrame();
     static DataOutputStream dout;
     
-    Server(){
+    Client(){
         
         f.setLayout(null);
         
@@ -50,7 +50,7 @@ public class Server implements ActionListener{
         
         
         // profile image------------------------
-        ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/1.png"));
+        ImageIcon i4 = new ImageIcon(ClassLoader.getSystemResource("icons/2.png"));
         Image i5 = i4.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT);
         ImageIcon i6 = new ImageIcon(i5);
         JLabel profile = new JLabel(i6);
@@ -86,7 +86,7 @@ public class Server implements ActionListener{
         
         
         // profile name-----------------
-        JLabel name = new JLabel("AI Shaker");
+        JLabel name = new JLabel("Mahfuz");
         name.setBounds(110, 15, 100, 18);
         name.setForeground(Color.WHITE);
         name.setFont(new Font("SAN_SERIF", Font.BOLD, 18));
@@ -125,9 +125,9 @@ public class Server implements ActionListener{
         
         
         
-        // profile 1 window---------------
+        // profile 2 window---------------
         f.setSize(450, 700);
-        f.setLocation(300, 100);
+        f.setLocation(1000, 100);
         f.setUndecorated(true);
         f.getContentPane().setBackground(Color.white);
         
@@ -145,7 +145,7 @@ public class Server implements ActionListener{
             String out = text.getText();
             //System.out.println(txt);
 
-            //JLabel output = new JLabel(out);
+            JLabel output = new JLabel(out);
 
             JPanel p2 = formatLabel(out);
             //p2.add(output);
@@ -198,26 +198,30 @@ public class Server implements ActionListener{
     
     public static void main(String[] args) {
         
-        new Server();
+        new Client();
         
         try{
-            ServerSocket skt = new ServerSocket(6001);
+            Socket s = new Socket("127.0.0.1", 6001);
+            DataInputStream din = new DataInputStream(s.getInputStream());
+            dout = new DataOutputStream(s.getOutputStream());
+            
+            
             while(true){
-                Socket s = skt.accept();
-                DataInputStream din = new DataInputStream(s.getInputStream());
-                dout = new DataOutputStream(s.getOutputStream());
+                a1.setLayout(new BorderLayout());
+                String msg = din.readUTF();
+                JPanel panel = formatLabel(msg);
                 
-                while(true){
-                    String msg = din.readUTF();
-                    JPanel panel = formatLabel(msg);
-                    
-                    JPanel left = new JPanel(new BorderLayout());
-                    left.add(panel, BorderLayout.LINE_START);
-                    vertical.add(left);
-                    f.validate();
-                }
+                JPanel left = new JPanel(new BorderLayout());
+                left.add(panel, BorderLayout.LINE_START);
+                vertical.add(left);
+                
+                vertical.add(Box.createVerticalStrut(12));
+                a1.add(vertical, BorderLayout.PAGE_START);
+                
+                f.validate();
             }
-        } catch (Exception e){
+            
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
